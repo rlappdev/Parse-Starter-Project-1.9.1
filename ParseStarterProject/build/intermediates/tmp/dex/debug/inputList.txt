@@ -1,0 +1,4 @@
+/Users/robertleung/Development/Parse-Starter-Project-1.9.1/ParseStarterProject/build/intermediates/classes/debug
+/Users/robertleung/Development/Parse-Starter-Project-1.9.1/ParseStarterProject/build/intermediates/pre-dexed/debug/bolts-android-1.2.0-8c08674357595fad8352d87d9e6d15c92327794f.jar
+/Users/robertleung/Development/Parse-Starter-Project-1.9.1/ParseStarterProject/build/intermediates/pre-dexed/debug/ParseCrashReporting-1.9.1-3ce7d2b9cf492f739dfb3000241fd77c4059ed30.jar
+/Users/robertleung/Development/Parse-Starter-Project-1.9.1/ParseStarterProject/build/intermediates/pre-dexed/debug/Parse-1.9.1-a0f2ca084ddf92ce44da5acf8fd71743c43f0f37.jar
