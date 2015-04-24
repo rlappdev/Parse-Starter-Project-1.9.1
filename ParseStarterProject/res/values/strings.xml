@@ -23,6 +23,10 @@
     <string name="option_menu_prefs">Preferences</string>
     <string name="option_menu_refresh">Refresh</string>
     <string name="option_menu_logout">Log out</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_next">Next</string>
+    <string name="action_done">Done</string>
+
 
     <!-- Registration Screen -->
     <string name="label_enterUsernamePasswordEmail">Enter your username, password and email to register</string>
@@ -49,10 +53,18 @@
     <string name="label_gamesiamplaying">View Games I am Playing</string>
     <string name="label_joingame">Join a Game</string>
     <string name="title_activity_main_menu">Menu</string>
-    <string name="title_activity_registration">RegistrationActivity</string>
+    <string name="title_activity_registration">Register</string>
 
     <!-- Login Screen -->
     <string name="label_enterUsernamePassword">Enter your username and password to login</string>
     <string name="label_login">Login</string>
     <string name="label_register">Register</string>
+    <string name="title_activity_create_game">CreateGameActivity</string>
+
+    <!-- Create Game Screen -->
+    <string name="hint_gameName">Enter a name for your game</string>
+    <string name="pick_startDate">Start</string>
+    <string name="pick_endDate">End</string>
+    <string name="title_activity_add_items">AddItemsActivity</string>
+
 </resources>

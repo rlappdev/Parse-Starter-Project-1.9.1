@@ -9,8 +9,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import java.util.Date;
+import java.util.Arrays;
+
 
 import com.parse.ParseUser;
+import com.parse.ParseObject;
 
 public class MainMenuActivity extends Activity {
     private Button newGameButton;
@@ -43,6 +47,22 @@ public class MainMenuActivity extends Activity {
                 // XXX open NewGameActivity
                 // Intent i = new Intent(mThisActivity, NewGameActivity.class);
                 // mThisActivity.startActivity(i);
+
+                startActivity(new Intent(MainMenuActivity.this, CreateGameActivity.class));
+                finish();
+
+                /*
+                ParseObject gameObject = new ParseObject("GameObject");
+                Date date = new Date();
+                gameObject.put("gameCreator", "Robert");
+                gameObject.put("gameName", "TestGame1");
+                gameObject.put("gameStartTime", date);
+                gameObject.put("gameEndTime", date);
+                gameObject.put("itemsToBeFound", Arrays.asList("laptop", "tablet"));
+                gameObject.put("players", Arrays.asList("Robert", "Joe"));
+                gameObject.saveInBackground();
+                */
+
             }
         });
 
