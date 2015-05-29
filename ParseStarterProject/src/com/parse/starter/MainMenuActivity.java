@@ -13,13 +13,16 @@ import java.util.Date;
 import java.util.Arrays;
 
 
+import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 import com.parse.ParseObject;
 
 public class MainMenuActivity extends Activity {
     private Button newGameButton;
-    private Button joinGameButton;
+    //private Button joinGameButton;
     private Button myGamesButton;
+    private Button myInvitesButton;
+
     @SuppressWarnings("unused")
     // This member will be used for actual game play, which is why it's
     // but since no game play code exists yet, it's unused in this activity
@@ -30,6 +33,9 @@ public class MainMenuActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
         setupButtonCallbacks();
+        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+        installation.put("user",ParseUser.getCurrentUser());
+        installation.saveInBackground();
     }
 
     public void onResume() {
@@ -49,7 +55,7 @@ public class MainMenuActivity extends Activity {
                 // mThisActivity.startActivity(i);
 
                 startActivity(new Intent(MainMenuActivity.this, CreateGameActivity.class));
-                finish();
+                //finish();
 
                 /*
                 ParseObject gameObject = new ParseObject("GameObject");
@@ -66,6 +72,7 @@ public class MainMenuActivity extends Activity {
             }
         });
 
+        /*
         joinGameButton = (Button) findViewById(R.id.mainMenuButton_joinGame);
         joinGameButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
@@ -74,6 +81,7 @@ public class MainMenuActivity extends Activity {
                 // mThisActivity.startActivity(i);
             }
         });
+        */
 
         myGamesButton = (Button) findViewById(R.id.mainMenuButton_myGames);
         myGamesButton.setOnClickListener(new OnClickListener() {
@@ -81,6 +89,19 @@ public class MainMenuActivity extends Activity {
                 // XXX open MyGamesActivity
                 // Intent i = new Intent(mThisActivity, MyGamesActivity.class);
                 // mThisActivity.startActivity(i);
+                startActivity(new Intent(MainMenuActivity.this, GamesActivity.class));
+
+            }
+        });
+
+        myInvitesButton = (Button) findViewById(R.id.mainMenuButton_myInvites);
+        myInvitesButton.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                // XXX open MyGamesActivity
+                // Intent i = new Intent(mThisActivity, MyGamesActivity.class);
+                // mThisActivity.startActivity(i);
+                startActivity(new Intent(MainMenuActivity.this, InvitesActivity.class));
+
             }
         });
 
@@ -107,11 +128,14 @@ public class MainMenuActivity extends Activity {
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         switch (item.getItemId()) {
+/*
             case R.id.menuitem_prefs:
                 // Intent i = new Intent(mThisActivity, PrefsActivity.class);
                 // mThisActivity.startActivity(i);
                 return true;
+*/
             case R.id.menuitem_logout:
                 ParseUser.logOut();
                 startActivity(new Intent(MainMenuActivity.this, LoginActivity.class));
@@ -120,6 +144,7 @@ public class MainMenuActivity extends Activity {
             default:
                 break;
         }
+
         return false;
     }
 

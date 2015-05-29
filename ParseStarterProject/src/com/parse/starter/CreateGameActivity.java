@@ -3,6 +3,7 @@ package com.parse.starter;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
@@ -16,15 +17,23 @@ import android.widget.Button;
 import android.app.Activity;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TimePicker;
 import android.widget.Toast;
 import android.support.v4.app.FragmentActivity;
+import android.text.format.DateFormat;
+
 
 import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 
 public class CreateGameActivity extends Activity {
@@ -33,9 +42,11 @@ public class CreateGameActivity extends Activity {
     private Button pickEndDateButton;
     private EditText gamenameEditText;
     private String gamename;
+    private String username;
     private String gameStartTime;
     private String gameEndTime;
-
+    ParseObject gameObject;
+    String data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,13 +72,90 @@ public class CreateGameActivity extends Activity {
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
             // Do something with the date chosen by the user
-            String date;
+            gameStartTime = day + "/" + (month + 1) + "/" + year;
+            DialogFragment newFragment = new StartTimePickerFragment();
+            newFragment.show(getFragmentManager(), "timePicker");
 
-            date = day + "/" + (month + 1) + "/" + year;
-            pickStartDateButton.setText(date);
+            //pickStartDateButton.setText(gameStartTime);
 
         }
     }
+
+    public class StartTimePickerFragment extends DialogFragment
+            implements TimePickerDialog.OnTimeSetListener {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current time as the default values for the picker
+            final Calendar c = Calendar.getInstance();
+            int hour = c.get(Calendar.HOUR_OF_DAY);
+            int minute = c.get(Calendar.MINUTE);
+
+            // Create a new instance of TimePickerDialog and return it
+            return new TimePickerDialog(getActivity(), this, hour, minute,
+                    DateFormat.is24HourFormat(getActivity()));
+        }
+
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            // Do something with the time chosen by the user
+
+            String sHour = "00";
+            if(hourOfDay < 10){
+                sHour = "0"+hourOfDay;
+            } else {
+                sHour = String.valueOf(hourOfDay);
+            }
+
+            String sMinute = "00";
+            if(minute < 10){
+                sMinute = "0"+minute;
+            } else {
+                sMinute = String.valueOf(minute);
+            }
+
+            gameStartTime = gameStartTime + " at " + sHour + ":" + sMinute;
+            pickStartDateButton.setText(gameStartTime);
+        }
+    }
+
+    public class EndTimePickerFragment extends DialogFragment
+            implements TimePickerDialog.OnTimeSetListener {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current time as the default values for the picker
+            final Calendar c = Calendar.getInstance();
+            int hour = c.get(Calendar.HOUR_OF_DAY);
+            int minute = c.get(Calendar.MINUTE);
+
+            // Create a new instance of TimePickerDialog and return it
+            return new TimePickerDialog(getActivity(), this, hour, minute,
+                    DateFormat.is24HourFormat(getActivity()));
+        }
+
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            // Do something with the time chosen by the user
+
+            String sHour = "00";
+            if(hourOfDay < 10){
+                sHour = "0"+hourOfDay;
+            } else {
+                sHour = String.valueOf(hourOfDay);
+            }
+
+            String sMinute = "00";
+            if(minute < 10){
+                sMinute = "0"+minute;
+            } else {
+                sMinute = String.valueOf(minute);
+            }
+
+            gameEndTime = gameEndTime + " at " + sHour + ":" + sMinute;
+            pickEndDateButton.setText(gameEndTime);
+
+        }
+    }
+
 
     public class EndDatePickerFragment extends DialogFragment
             implements DatePickerDialog.OnDateSetListener {
@@ -86,10 +174,10 @@ public class CreateGameActivity extends Activity {
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
             // Do something with the date chosen by the user
-            String date;
+            gameEndTime = day + "/" + (month + 1) + "/" + year;
 
-            date = day + "/" + (month + 1) + "/" + year;
-            pickEndDateButton.setText(date);
+            DialogFragment newFragment = new EndTimePickerFragment();
+            newFragment.show(getFragmentManager(), "timePicker");
 
         }
     }
@@ -140,13 +228,77 @@ public class CreateGameActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.action_cancel:
-                startActivity(new Intent(CreateGameActivity.this, MainMenuActivity.class));
-                finish();
-                return true;
             case R.id.action_next:
-                test();
+                gamenameEditText = (EditText) findViewById(R.id.textbox_gameName);
+                gamename = gamenameEditText.getText().toString();
+                //pickStartDateButton = (Button) findViewById(R.id.button_pick_startDate);
+                //gameStartTime = pickStartDateButton.getText().toString();
+                //pickEndDateButton = (Button) findViewById(R.id.button_pick_endDate);
+                //gameEndTime = pickEndDateButton.getText().toString();
+                //DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                //Date date = new Date();
+
+
+                //System.out.println(startDate);
+                //gameStartTime = formatter.parse(date);
+                //DateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.ENGLISH);;
+
+
+
+                if (gamename == null || gamename.length() == 0) {
+                    showToast(CreateGameActivity.this, getString(R.string.hint_gameName));
+                    break;
+                } else if (gameStartTime == null || gameStartTime.length() == 0) {
+                    showToast(CreateGameActivity.this, getString(R.string.hint_startTime));
+                    break;
+                } else if (gameEndTime == null || gameEndTime.length() == 0) {
+                    showToast(CreateGameActivity.this, getString(R.string.hint_endTime));
+                    break;
+                }
+
+                Date startDate = new Date();
+                Date endDate = new Date();
+                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy 'at' HH:mm");
+                //formatter = new SimpleDateFormat("dd-mm-yyyy HHmm", Locale.US);
+                //formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+                try {
+                    startDate = formatter.parse(gameStartTime);
+                    endDate = formatter.parse(gameEndTime);
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                ParseUser currentUser = ParseUser.getCurrentUser();
+                username = currentUser.getUsername();
+                String currentUserObjectId = currentUser.getObjectId();
+                gameObject = new ParseObject("GameObject");
+                gameObject.put("gameCreator", currentUserObjectId);
+                gameObject.put("gameName", gamename);
+                //gameObject.put("gameStartTime", date);
+                gameObject.put("gameStartTime", startDate);
+                gameObject.put("gameEndTime", endDate);
+                gameObject.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(com.parse.ParseException e) {
+                        if (e == null) {
+                            data = gameObject.getObjectId();
+                            //data = gameObject.getString("gameName");
+                            //System.out.println(data);
+                            Intent intent = new Intent(CreateGameActivity.this, AddItemsActivity.class);
+                            intent.putExtra("info", data);
+                            //intent.putExtra("info2", "test2");
+                            startActivity(intent);
+                        } else {
+                            showToast(CreateGameActivity.this, getString(R.string.label_createGameErrorMessage) + " "
+                                    + getString(R.string.label_loginPleaseTryAgainMessage));
+                        }
+
+
+                    }
+                });
                 return true;
+
             default:
                 break;
         }
@@ -154,41 +306,5 @@ public class CreateGameActivity extends Activity {
     }
 
 
-    /*
-    private void getGameInfo() {
-        gamenameEditText = (EditText) findViewById(R.id.textbox_gameName);
-        gamename = gamenameEditText.getText().toString();
-        // game name validation -- need to make sure this is unique
-        if (gamename == null || gamename.length() == 0) {
-            showToast(CreateGameActivity.this, getString(R.string.hint_username));
-            return;
-        }
-
-        ParseUser currentUser = ParseUser.getCurrentUser();
-
-        gameStartTime = pickStartDateButton.getText().toString();
-        gameEndTime = pickEndDateButton.getText().toString();
-
-        ParseObject gameObject = new ParseObject("GameObject");
-        Date date = new Date();
-        gameObject.put("gameCreator", currentUser);
-        gameObject.put("gameName", gamename);
-        gameObject.put("gameStartTime", gameStartTime);
-        gameObject.put("gameEndTime", gameEndTime);
-        gameObject.saveInBackground();
-
-    }
-    */
-
-    private void test() {
-
-        gamenameEditText = (EditText) findViewById(R.id.textbox_gameName);
-        gamename = gamenameEditText.getText().toString();
-        ParseUser currentUser = ParseUser.getCurrentUser();
-        ParseObject gameObject = new ParseObject("GameObject");
-        gameObject.put("gameCreator", currentUser);
-        gameObject.put("gameName", gamename);
-        gameObject.saveInBackground();
-    }
 
 }

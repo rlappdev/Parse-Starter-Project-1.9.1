@@ -21,8 +21,10 @@ import com.parse.Parse;
 import com.parse.ParseACL;
 import com.parse.ParseException;
 
+import com.parse.ParseInstallation;
+import com.parse.ParsePush;
 import com.parse.ParseUser;
-
+import com.parse.SaveCallback;
 
 
 public class LoginActivity extends Activity {
@@ -46,6 +48,18 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
         initializeParse();
         setupButtonCallbacks();
+        //ParseInstallation.getCurrentInstallation().saveInBackground();
+
+        ParsePush.subscribeInBackground("", new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    Log.d("com.parse.push", "successfully subscribed to the broadcast channel.");
+                } else {
+                    Log.e("com.parse.push", "failed to subscribe for push", e);
+                }
+            }
+        });
     }
 
     public void initializeParse() {
@@ -136,7 +150,6 @@ public class LoginActivity extends Activity {
             public void onClick(View v) {
                 // Go to RegistrationActivity
                 startActivity(new Intent(LoginActivity.this, RegistrationActivity.class));
-                finish();
             }
         });
     }

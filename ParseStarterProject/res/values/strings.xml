@@ -4,7 +4,7 @@
 
     <string name="hello">Hello World, ParseStarterProjectActivity!</string>
     <string name="app_name">Scavenger Hunt</string>
-    <string name="title_activity_login">Login</string>
+    <string name="title_activity_login">Scavenger Hunt</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -29,7 +29,7 @@
 
 
     <!-- Registration Screen -->
-    <string name="label_enterUsernamePasswordEmail">Enter your username, password and email to register</string>
+    <string name="label_enterUsernamePasswordEmail">Enter your registration info:</string>
     <string name="label_username">Username</string>
     <string name="hint_username">Enter username</string>
     <string name="label_password">Password</string>
@@ -47,24 +47,66 @@
     <string name="label_loginPleaseTryAgainMessage">Please try again</string>
     <string name="label_loginUsernameAlreadyExists">Already a user with that username.  Please choose a new username</string>
     <string name="label_loginEmailAlreadyExists">Already a user with that email address.  Please choose a new email</string>
-    <string name="label_selectOption">What would you like to do?</string>
-    <string name="label_newgame">Start a new Game</string>
-    <string name="label_mygames">View My Games</string>
+    <string name="label_selectOption">Select an option:</string>
     <string name="label_gamesiamplaying">View Games I am Playing</string>
     <string name="label_joingame">Join a Game</string>
     <string name="title_activity_main_menu">Menu</string>
     <string name="title_activity_registration">Register</string>
 
+    <!-- Main Menu Screen -->
+    <string name="label_newgame">Create Game</string>
+    <string name="label_mygames">View Games</string>
+    <string name="label_myinvites">View Invites</string>
+
     <!-- Login Screen -->
-    <string name="label_enterUsernamePassword">Enter your username and password to login</string>
+    <string name="label_enterUsernamePassword">Enter your login info:</string>
     <string name="label_login">Login</string>
     <string name="label_register">Register</string>
-    <string name="title_activity_create_game">CreateGameActivity</string>
+    <string name="title_activity_create_game">Create Game</string>
 
     <!-- Create Game Screen -->
     <string name="hint_gameName">Enter a name for your game</string>
-    <string name="pick_startDate">Start</string>
-    <string name="pick_endDate">End</string>
-    <string name="title_activity_add_items">AddItemsActivity</string>
+    <string name="hint_startTime">Enter a start time for your game</string>
+    <string name="hint_endTime">Enter a end time for your game</string>
+    <string name="pick_startDate">Start time</string>
+    <string name="pick_endDate">End time</string>
+    <string name="label_createGameErrorMessage">Error creating game.</string>
+
+
+
+    <!-- Add Items Screen -->
+    <string name="hint_itemName">Type item name</string>
+    <string name="title_activity_add_items">Add Items</string>
+    <string name="label_addItemErrorMessage">Error adding item.</string>
+
+    <!-- Add Players Screen -->
+    <string name="hint_playerName">Type player name</string>
+    <string name="title_activity_add_players">Add Players</string>
+    <string name="label_addPlayerErrorMessage">Error adding player.</string>
+
+    <!-- Games Screen -->
+    <string name="title_activity_games">Games</string>
+
+    <!-- Player List Screen -->
+    <string name="title_activity_player_list">Add Players</string>
+    <string name="label_invitePlayer">Click to invite:</string>
+
+    <!-- Game Detail Screen -->
+    <string name="title_activity_game_detail">Game Detail</string>
+
+    <!-- Test Screen -->
+    <string name="title_activity_test">TestActivity</string>
+
+    <!-- Invites Screen -->
+    <string name="title_activity_invites">Invites</string>
+    <string name="label_invite">Click to respond:</string>
+
+    <!-- Invite Response Screen -->
+    <string name="title_activity_invite_response">Invite Response</string>
+    <string name="label_respond">Select a response:</string>
+    <string name="label_acceptInvite">Accept</string>
+    <string name="label_declineInvite">Decline</string>
+
+
 
 </resources>

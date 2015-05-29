@@ -36,6 +36,12 @@ android {
             res.srcDirs = ['res']
         }
     }
+
+    buildTypes {
+        debug {
+            debuggable true
+        }
+    }
 }
 
 /* Uncomment if you enable ProGuard and you want to automatically upload symbols on build.

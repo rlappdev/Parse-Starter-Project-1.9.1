@@ -13,53 +13,30 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:text="@string/label_selectOption"
+        android:text="@string/label_respond"
         android:textSize="16.0sp"
         android:textStyle="bold" />
 
     <Button
-        android:id="@+id/mainMenuButton_newGame"
+        android:id="@+id/inviteResponseButton_accept"
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
         android:gravity="center"
-        android:text="@string/label_newgame"
-        android:textSize="16sp"
-        android:textStyle="normal"
-        android:layout_marginBottom="10dp"
-        />
-<!--
-    <Button
-        android:id="@+id/mainMenuButton_joinGame"
-        android:layout_height="wrap_content"
-        android:layout_width="fill_parent"
-        android:gravity="center"
-        android:text="@string/label_joingame"
-        android:textSize="16sp"
-        android:textStyle="normal"
-        android:layout_marginBottom="10dp"
-        />
--->
-    <Button
-        android:id="@+id/mainMenuButton_myGames"
-        android:layout_height="wrap_content"
-        android:layout_width="fill_parent"
-        android:gravity="center"
-        android:text="@string/label_mygames"
+        android:text="@string/label_acceptInvite"
         android:textSize="16sp"
         android:textStyle="normal"
         android:layout_marginBottom="10dp"
         />
 
     <Button
-        android:id="@+id/mainMenuButton_myInvites"
+        android:id="@+id/inviteResponseButton_decline"
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
         android:gravity="center"
-        android:text="@string/label_myinvites"
+        android:text="@string/label_declineInvite"
         android:textSize="16sp"
         android:textStyle="normal"
         android:layout_marginBottom="10dp"
         />
-
 
 </LinearLayout>
