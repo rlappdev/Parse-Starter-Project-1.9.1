@@ -27,6 +27,7 @@ import com.google.android.gms.games.Players;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.Parse;
+import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
@@ -50,8 +51,9 @@ public class PlayerListActivity extends Activity {
     //String userObjectId;
     String[] names;
     String creator;
+    //String creatorId;
     //String[] toppings = new String[1];
-
+    int iCount;
 
 
     @Override
@@ -63,6 +65,8 @@ public class PlayerListActivity extends Activity {
         if(b!=null) {
             gameId = (String) b.get("info3");
             //System.out.println(gameId);
+            //iCount = (int) b.get("count");
+            //System.out.println(iCount);
         }
 
         ParseQuery<ParseObject> gameNameQuery = ParseQuery.getQuery("GameObject");
@@ -72,22 +76,29 @@ public class PlayerListActivity extends Activity {
                 if (e == null) {
 
                     gName = object.getString("gameName");
+                    iCount = object.getInt("itemCount");
                     //System.out.println("gName");
+                    //System.out.println(iCount);
                 } else {
                 }
+                ParseObject gamePlayers = new ParseObject("GamesInvitedObject");
+                ParseUser user = ParseUser.getCurrentUser();
+                creator = user.getUsername();
+                //creatorId = user.getObjectId();
+                gamePlayers.put("username", creator);
+                //String id = user.getObjectId();
+                //gamePlayers.put("userObjectId", id);
+                gamePlayers.put("gamesInvited", gameId);
+                gamePlayers.put("gamesInvitedName", gName);
+                gamePlayers.put("itemCount", iCount);
+                gamePlayers.put("response", "accepted");
+                gamePlayers.saveInBackground();
             }
         });
 
         //toppings[0] = "test";
 
-        ParseObject gamePlayers = new ParseObject("GamesJoinedObject");
-        ParseUser user = ParseUser.getCurrentUser();
-        creator = user.getUsername();
-        gamePlayers.put("username", creator);
-        //String id = user.getObjectId();
-        //gamePlayers.put("userObjectId", id);
-        gamePlayers.put("gamesJoined", gameId);
-        gamePlayers.saveInBackground();
+
         //System.out.println(creator);
 
         //ParseUser user = ParseUser.getCurrentUser();
@@ -151,6 +162,7 @@ public class PlayerListActivity extends Activity {
                 //playerInvite.put("userObjectId", userObjectId);
                 playerInvite.put("gamesInvited", gameId);
                 playerInvite.put("gamesInvitedName", gName);
+                playerInvite.put("itemCount", iCount);
                 playerInvite.saveInBackground();
 
 
@@ -284,29 +296,47 @@ public class PlayerListActivity extends Activity {
             //query GamesInvitedObject for all users invited to the gameId
             ParseQuery<ParseObject> queryId = ParseQuery.getQuery("GamesInvitedObject");
             queryId.whereEqualTo("gamesInvited", gameId);
+            queryId.whereNotEqualTo("username", creator);
             queryId.findInBackground(new FindCallback<ParseObject>() {
                 public void done(List<ParseObject> objects, ParseException e) {
                     if (e == null) {
                         int n = objects.size();
                         names = new String[n];
                         for (int i = 0; i < objects.size(); i++) {
-                            ParseObject selected = (ParseObject) objects.get(i);
+                            final ParseObject selected = (ParseObject) objects.get(i);
                             String name = selected.getString("username");
                             names[i] = name;
                             //System.out.println(name);
+                            ParseQuery userQuery = ParseUser.getQuery();
+                            userQuery.whereEqualTo("username", name);
+                            userQuery.getFirstInBackground(new GetCallback<ParseUser>() {
+                                public void done(ParseUser object, ParseException e) {
+                                    if (e == null) {
+                                        String user = object.getObjectId();
+                                        ParseACL inviteACL = new ParseACL();
+                                        inviteACL.setPublicReadAccess(true);
+                                        inviteACL.setWriteAccess(user, true);
+                                        selected.setACL(inviteACL);
+                                        selected.saveInBackground();
+
+                                    }
+                                }
+                            });
+
+
+
 
                         }
                     } else {
                     }
                     notifyInvitees();
+
                 }
             });
 
-
-
-            startActivity(new Intent(PlayerListActivity.this, GamesActivity.class));
-            finish();
             return true;
+
+
         }
 
 
@@ -326,5 +356,7 @@ public class PlayerListActivity extends Activity {
         push.setQuery(pushQuery); // Set our Installation query
         push.setMessage(creator + " has invited you to the following game: " + gName);
         push.sendInBackground();
+        startActivity(new Intent(PlayerListActivity.this, GamesActivity.class));
+        finish();
     }
 }

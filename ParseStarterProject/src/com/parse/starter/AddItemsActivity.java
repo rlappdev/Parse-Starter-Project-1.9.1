@@ -87,6 +87,8 @@ public class AddItemsActivity extends Activity {
 
                 }
 
+
+
             }
 
         });
@@ -139,13 +141,22 @@ public class AddItemsActivity extends Activity {
                 query.countInBackground(new CountCallback() {
                     public void done(final int count, com.parse.ParseException e) {
                         if (e == null) {
-                            //final int itemCount = count;
                             ParseQuery<ParseObject> query = ParseQuery.getQuery("GameObject");
                             query.getInBackground(gameId, new GetCallback<ParseObject>() {
                                 public void done(ParseObject gameObject, com.parse.ParseException e) {
                                     if (e == null) {
                                         gameObject.put("itemCount", count);
-                                        gameObject.saveInBackground();
+                                        gameObject.saveInBackground(new SaveCallback() {
+                                            @Override
+                                            public void done(com.parse.ParseException e) {
+                                                if (e == null) {
+                                                    Intent intent = new Intent(AddItemsActivity.this, PlayerListActivity.class);
+                                                    intent.putExtra("info3", gameId);
+                                                    startActivity(intent);
+                                                } else {
+                                                }
+                                            }
+                                        });
                                     }
                                 }
                             });
@@ -154,9 +165,8 @@ public class AddItemsActivity extends Activity {
                         }
                     }
                 });
-                Intent intent = new Intent(AddItemsActivity.this, PlayerListActivity.class);
-                intent.putExtra("info3", gameId);
-                startActivity(intent);
+
+
                 return true;
             default:
                 break;

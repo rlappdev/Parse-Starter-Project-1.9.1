@@ -55,7 +55,7 @@
 
     <!-- Main Menu Screen -->
     <string name="label_newgame">Create Game</string>
-    <string name="label_mygames">View Games</string>
+    <string name="label_mygames">Play Games</string>
     <string name="label_myinvites">View Invites</string>
 
     <!-- Login Screen -->
@@ -85,7 +85,9 @@
     <string name="label_addPlayerErrorMessage">Error adding player.</string>
 
     <!-- Games Screen -->
-    <string name="title_activity_games">Games</string>
+    <string name="title_activity_games">Play Games</string>
+    <string name="label_game">Click to play:</string>
+
 
     <!-- Player List Screen -->
     <string name="title_activity_player_list">Add Players</string>
@@ -93,12 +95,14 @@
 
     <!-- Game Detail Screen -->
     <string name="title_activity_game_detail">Game Detail</string>
+    <string name="label_gameDetails">Click an item to submit a picture:</string>
+
 
     <!-- Test Screen -->
     <string name="title_activity_test">TestActivity</string>
 
     <!-- Invites Screen -->
-    <string name="title_activity_invites">Invites</string>
+    <string name="title_activity_invites">View Invites</string>
     <string name="label_invite">Click to respond:</string>
 
     <!-- Invite Response Screen -->

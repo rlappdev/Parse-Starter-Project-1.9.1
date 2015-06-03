@@ -1,26 +1,35 @@
 package com.parse.starter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 
 import java.util.Arrays;
+import java.util.List;
+
+import static com.parse.ParseQueryAdapter.OnQueryLoadListener;
 
 
 public class InvitesActivity extends Activity {
 
     ListView invitesListView;
+    TextView invitesTextView;
     String username;
 
 
@@ -44,6 +53,8 @@ public class InvitesActivity extends Activity {
                         // Here we can configure a ParseQuery to our heart's desire.
                         ParseQuery query = new ParseQuery("GamesInvitedObject");
                         query.whereEqualTo("username", username);
+                        String[] responses = {"declined", "accepted"};
+                        query.whereNotContainedIn("response", Arrays.asList(responses));
                         query.orderByDescending("createdAt");
                         return query;
 
@@ -54,7 +65,28 @@ public class InvitesActivity extends Activity {
                 });
         adapter.setTextKey("gamesInvitedName");
         invitesListView = (ListView) this.findViewById(R.id.invites_listview);
+        invitesTextView = (TextView) this.findViewById(R.id.invites_textview);
+
+
+        adapter.addOnQueryLoadListener(new OnQueryLoadListener<ParseObject>() {
+
+           @Override
+           public void onLoading() {
+
+           }
+
+           @Override
+           public void onLoaded(List<ParseObject> parseObjects, Exception e) {
+               if ((parseObjects == null) || (parseObjects.size() == 0)) {
+
+                   invitesTextView.setText("Sorry, no invites to display.");
+               }
+           }
+
+       });
+
         invitesListView.setAdapter(adapter);
+
         invitesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -73,6 +105,11 @@ public class InvitesActivity extends Activity {
 
     }
 
+    public void showToast(Context context, String message) {
+        Toast toast = Toast.makeText(context, message, Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 0, 0);
+        toast.show();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

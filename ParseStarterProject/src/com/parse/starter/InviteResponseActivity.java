@@ -1,13 +1,16 @@
 package com.parse.starter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.GetCallback;
@@ -29,6 +32,7 @@ public class InviteResponseActivity extends Activity {
     private Button declineButton;
     String username;
     String creator;
+    String creatorName;
     String gName;
 
     @Override
@@ -53,7 +57,7 @@ public class InviteResponseActivity extends Activity {
 
                     gName = object.getString("gameName");
                     creator = object.getString("gameCreator");
-
+                    creatorName = object.getString("gameCreatorName");
                     System.out.println(gName);
                     System.out.println(creator);
 
@@ -70,67 +74,67 @@ public class InviteResponseActivity extends Activity {
         acceptButton = (Button) findViewById(R.id.inviteResponseButton_accept);
         acceptButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // XXX open NewGameActivity
-                // Intent i = new Intent(mThisActivity, NewGameActivity.class);
-                // mThisActivity.startActivity(i);
+                ParseQuery<ParseObject> queryId = ParseQuery.getQuery("GamesInvitedObject");
+                queryId.whereEqualTo("gamesInvited", gameId);
+                queryId.whereEqualTo("username", username);
+                queryId.getFirstInBackground(new GetCallback<ParseObject>() {
+                    public void done(ParseObject object, ParseException e) {
+                        if (e == null) {
+                            //object.deleteInBackground();
+                            object.put("response", "accepted");
+                            //object.remove("gamesInvited");
+                            object.saveInBackground();
+                            //System.out.println(object);
 
-                //startActivity(new Intent(MainMenuActivity.this, CreateGameActivity.class));
-                //finish();
-
-                /*
-                ParseObject gameObject = new ParseObject("GameObject");
-                Date date = new Date();
-                gameObject.put("gameCreator", "Robert");
-                gameObject.put("gameName", "TestGame1");
-                gameObject.put("gameStartTime", date);
-                gameObject.put("gameEndTime", date);
-                gameObject.put("itemsToBeFound", Arrays.asList("laptop", "tablet"));
-                gameObject.put("players", Arrays.asList("Robert", "Joe"));
-                gameObject.saveInBackground();
-                */
-
+                        } else {
+                        }
+                        notifyAccept();
+                        showToast(InviteResponseActivity.this, ("Invitation accepted, " + creatorName + " has been notified."));
+                        startActivity(new Intent(InviteResponseActivity.this, GamesActivity.class));
+                    }
+                });
             }
         });
 
         declineButton = (Button) findViewById(R.id.inviteResponseButton_decline);
         declineButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // XXX open NewGameActivity
-                // Intent i = new Intent(mThisActivity, NewGameActivity.class);
-                // mThisActivity.startActivity(i);
-
-                //startActivity(new Intent(MainMenuActivity.this, CreateGameActivity.class));
-                //finish();
-
-                /*
-                ParseObject gameObject = new ParseObject("GameObject");
-                Date date = new Date();
-                gameObject.put("gameCreator", "Robert");
-                gameObject.put("gameName", "TestGame1");
-                gameObject.put("gameStartTime", date);
-                gameObject.put("gameEndTime", date);
-                gameObject.put("itemsToBeFound", Arrays.asList("laptop", "tablet"));
-                gameObject.put("players", Arrays.asList("Robert", "Joe"));
-                gameObject.saveInBackground();
-                */
 
                 ParseQuery<ParseObject> queryId = ParseQuery.getQuery("GamesInvitedObject");
                 queryId.whereEqualTo("gamesInvited", gameId);
-                //queryId.whereEqualTo("username", username);
+                queryId.whereEqualTo("username", username);
                 queryId.getFirstInBackground(new GetCallback<ParseObject>() {
                     public void done(ParseObject object, ParseException e) {
                         if (e == null) {
                             //object.deleteInBackground();
-                            object.put("Declined", "yes");
+                            object.put("response", "declined");
                             //object.remove("gamesInvited");
-                            //object.saveInBackground();
+                            object.saveInBackground();
+                            System.out.println("help");
+
                         } else {
                         }
                         notifyDecline();
+                        showToast(InviteResponseActivity.this, ("Invitation declined, " + creatorName + " has been notified."));
+                        startActivity(new Intent(InviteResponseActivity.this, InvitesActivity.class));
                     }
                 });
             }
         });
+    }
+
+    public void notifyAccept() {
+        //push notification to users with the correct game invites
+        ParseQuery userQuery = ParseUser.getQuery();
+        userQuery.whereEqualTo("objectId", creator);
+        // Find devices associated with these users
+        ParseQuery pushQuery = ParseInstallation.getQuery();
+        pushQuery.whereMatchesQuery("user", userQuery);
+        // Send push notification to query
+        ParsePush push = new ParsePush();
+        push.setQuery(pushQuery); // Set our Installation query
+        push.setMessage(username + " accepted your invite to the following game: " + gName);
+        push.sendInBackground();
     }
 
     public void notifyDecline() {
@@ -145,6 +149,12 @@ public class InviteResponseActivity extends Activity {
         push.setQuery(pushQuery); // Set our Installation query
         push.setMessage(username + " declined your invite to the following game: " + gName);
         push.sendInBackground();
+    }
+
+    public void showToast(Context context, String message) {
+        Toast toast = Toast.makeText(context, message, Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 0, 0);
+        toast.show();
     }
 
     @Override

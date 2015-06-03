@@ -272,8 +272,10 @@ public class CreateGameActivity extends Activity {
                 ParseUser currentUser = ParseUser.getCurrentUser();
                 username = currentUser.getUsername();
                 String currentUserObjectId = currentUser.getObjectId();
+                String currentUserName = currentUser.getUsername();
                 gameObject = new ParseObject("GameObject");
                 gameObject.put("gameCreator", currentUserObjectId);
+                gameObject.put("gameCreatorName", currentUserName);
                 gameObject.put("gameName", gamename);
                 //gameObject.put("gameStartTime", date);
                 gameObject.put("gameStartTime", startDate);
