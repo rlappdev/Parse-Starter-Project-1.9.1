@@ -23,6 +23,8 @@ import android.support.v4.app.FragmentActivity;
 import android.text.format.DateFormat;
 
 
+import com.parse.FunctionCallback;
+import com.parse.ParseCloud;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -32,6 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -53,6 +56,17 @@ public class CreateGameActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_game);
         setupButtonCallbacks();
+
+        ParseCloud.callFunctionInBackground("hello", new HashMap<String, Object>(), new FunctionCallback<String>() {
+            @Override
+            public void done(String result, com.parse.ParseException e) {
+                if (e == null) {
+                    // result is "Hello world!"
+                }
+            }
+
+
+        });
     }
 
     public class StartDatePickerFragment extends DialogFragment
@@ -299,6 +313,10 @@ public class CreateGameActivity extends Activity {
 
                     }
                 });
+
+
+
+
                 return true;
 
             default:

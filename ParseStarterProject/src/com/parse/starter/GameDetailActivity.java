@@ -44,6 +44,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -65,6 +66,9 @@ public class GameDetailActivity extends Activity {
     int foundCount;
     String[] names;
     String winnerName;
+    Date currentTime;
+    Date endTime;
+    Date startTime;
 
     public GameDetailActivity() {
     }
@@ -86,7 +90,49 @@ public class GameDetailActivity extends Activity {
             //System.out.println(gameId);
         }
 
+        ParseQuery<ParseObject> gameEndQuery = ParseQuery.getQuery("GameObject");
+        gameEndQuery.whereEqualTo("objectId", gameId);
+        gameEndQuery.getFirstInBackground(new GetCallback<ParseObject>() {
+            public void done(ParseObject object, ParseException e) {
+                if (e == null) {
 
+
+
+                    currentTime = new Date();
+                    System.out.println(currentTime);
+                    endTime = object.getDate("gameEndTime");
+                    System.out.println(endTime);
+                    startTime = object.getDate("gameStartTime");
+
+                    if (endTime.before(currentTime)) {
+
+                        gameEnded();
+                    }else if (startTime.after(currentTime)){
+
+                        gameDetailsTextView.setText("The game does not start until: " + startTime);
+
+                    } else {
+
+                        checkForWin();
+
+                    }
+
+                }
+            }
+        });
+
+
+    }
+
+
+
+
+
+
+
+
+
+    private void checkForWin(){
         ParseQuery<ParseObject> gameWonQuery = ParseQuery.getQuery("GamesInvitedObject");
         gameWonQuery.whereEqualTo("gamesInvited", gameId);
         gameWonQuery.whereEqualTo("winner", "winner");
@@ -100,7 +146,23 @@ public class GameDetailActivity extends Activity {
                 }
             }
         });
+    }
 
+    private void gameEnded() {
+        ParseQuery<ParseObject> statusQuery = ParseQuery.getQuery("GamesInvitedObject");
+        statusQuery.whereEqualTo("gamesInvited", gameId);
+        statusQuery.whereEqualTo("username", playerName);
+        statusQuery.getFirstInBackground(new GetCallback<ParseObject>() {
+            public void done(ParseObject object, ParseException e) {
+                if (e == null) {
+                    object.put("gameStatus", "over");
+                    object.saveInBackground();
+                    gameDetailsTextView.setText("The game's end time has passed: " + endTime);
+
+                }
+
+            }
+        });
     }
 
     private void updateGameStatus() {
@@ -112,7 +174,7 @@ public class GameDetailActivity extends Activity {
                 if (e == null) {
                     object.put("gameStatus", "over");
                     object.saveInBackground();
-                    gameDetailsTextView.setText("Game over. " + winnerName + " has won!");
+                    gameDetailsTextView.setText("Game over. " + winnerName + " won this game!");
 
                 }
 
