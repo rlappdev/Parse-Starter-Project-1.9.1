@@ -11,6 +11,17 @@
     android:layout_margin="10dp"
     android:orientation="vertical" >
 
+    <Button
+        android:id="@+id/gameDetails_leaderboard_button"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:gravity="center"
+        android:text="@string/label_leaderboard"
+        android:textSize="16sp"
+        android:textStyle="normal"
+        android:layout_marginBottom="10dp"
+        />
+
     <TextView
         android:id="@+id/gameDetails_textview"
         android:layout_width="wrap_content"
@@ -29,4 +40,12 @@
         android:textSize="16sp"
         android:visibility="visible" />
 
+    <TextView
+        android:id="@+id/gameDetails_timeRemaining_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:textSize="16.0sp"
+        android:textStyle="bold"
+        android:visibility="visible" />
 </LinearLayout>

@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -59,6 +60,7 @@ public class GameDetailActivity extends Activity {
     String gName;
     ListView gameDetailsItemsListView;
     TextView gameDetailsTextView;
+    TextView gameDetailsTimeRemainingTextView;
     int iCount;
     String playerName;
     static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -69,6 +71,8 @@ public class GameDetailActivity extends Activity {
     Date currentTime;
     Date endTime;
     Date startTime;
+    String timeRemaining;
+    private Button viewLeaderboard;
 
     public GameDetailActivity() {
     }
@@ -81,6 +85,8 @@ public class GameDetailActivity extends Activity {
         ParseUser user = ParseUser.getCurrentUser();
         playerName = user.getUsername();
         gameDetailsTextView = (TextView) this.findViewById(R.id.gameDetails_textview);
+        gameDetailsTimeRemainingTextView = (TextView) this.findViewById(R.id.gameDetails_timeRemaining_textview);
+        setupButtonCallbacks();
 
 
         Intent intent = getIntent();
@@ -90,6 +96,34 @@ public class GameDetailActivity extends Activity {
             //System.out.println(gameId);
         }
 
+        ParseQuery<ParseObject> gameWonQuery = ParseQuery.getQuery("GamesInvitedObject");
+        gameWonQuery.whereEqualTo("gamesInvited", gameId);
+        gameWonQuery.whereEqualTo("winner", "winner");
+        gameWonQuery.getFirstInBackground(new GetCallback<ParseObject>() {
+            public void done(ParseObject object, ParseException e) {
+                if (object == null) {
+                } else {
+                    winnerName = object.getString("username");
+                    updateGameStatus();
+                }
+                checkForEnd();
+
+            }
+        });
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+    private void checkForEnd(){
         ParseQuery<ParseObject> gameEndQuery = ParseQuery.getQuery("GameObject");
         gameEndQuery.whereEqualTo("objectId", gameId);
         gameEndQuery.getFirstInBackground(new GetCallback<ParseObject>() {
@@ -113,36 +147,11 @@ public class GameDetailActivity extends Activity {
 
                     } else {
 
-                        checkForWin();
+                        loadGameDetails();
+
 
                     }
 
-                }
-            }
-        });
-
-
-    }
-
-
-
-
-
-
-
-
-
-    private void checkForWin(){
-        ParseQuery<ParseObject> gameWonQuery = ParseQuery.getQuery("GamesInvitedObject");
-        gameWonQuery.whereEqualTo("gamesInvited", gameId);
-        gameWonQuery.whereEqualTo("winner", "winner");
-        gameWonQuery.getFirstInBackground(new GetCallback<ParseObject>() {
-            public void done(ParseObject object, ParseException e) {
-                if (object == null) {
-                    loadGameDetails();
-                } else {
-                    winnerName = object.getString("username");
-                    updateGameStatus();
                 }
             }
         });
@@ -183,6 +192,18 @@ public class GameDetailActivity extends Activity {
     }
 
     private void loadGameDetails() {
+
+        long diff = endTime.getTime() - currentTime.getTime();
+
+        //long diffSeconds = diff / 1000 % 60;
+        long diffMinutes = diff / (60 * 1000) % 60;
+        long diffHours = diff / (60 * 60 * 1000) % 24;
+        long diffDays = diff / (24 * 60 * 60 * 1000);
+
+        timeRemaining = "Time Remaining: " + diffDays + " days, " + diffHours + " hours, " + diffMinutes + " minutes.";
+        gameDetailsTimeRemainingTextView.setText(timeRemaining);
+
+
 
         ParseQuery<ParseObject> gameNameQuery = ParseQuery.getQuery("GameObject");
         gameNameQuery.whereEqualTo("objectId", gameId);
@@ -464,6 +485,22 @@ public class GameDetailActivity extends Activity {
         return imgArray;
     }
 */
+
+    private void setupButtonCallbacks() {
+        viewLeaderboard = (Button) findViewById(R.id.gameDetails_leaderboard_button);
+        viewLeaderboard.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+
+
+                Intent intent = new Intent(GameDetailActivity.this, LeaderboardActivity.class);
+                intent.putExtra("info5", gameId);
+                startActivity(intent);
+
+            }
+        });
+    }
+
     public void showToast(Context context, String message) {
         Toast toast = Toast.makeText(context, message, Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 0, 0);
