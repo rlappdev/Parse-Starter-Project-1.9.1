@@ -102,11 +102,11 @@ public class GameDetailActivity extends Activity {
         gameWonQuery.getFirstInBackground(new GetCallback<ParseObject>() {
             public void done(ParseObject object, ParseException e) {
                 if (object == null) {
+                    checkForEnd();
                 } else {
                     winnerName = object.getString("username");
                     updateGameStatus();
                 }
-                checkForEnd();
 
             }
         });

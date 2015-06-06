@@ -114,8 +114,16 @@
 
     <!-- Leaderboard Screen -->
     <string name="title_activity_leaderboard">Leaderboard</string>
-    <string name="label_player">Player</string>
-    <string name="label_found">Items Found</string>
+    <string name="label_player"><u>Player</u></string>
+    <string name="label_found"><u>Items Found</u></string>
+
+    <!-- Found Items Screen -->
+    <string name="title_activity_found_items">Found Items</string>
+    <string name="label_item"><u>Item</u></string>
+    <string name="label_timeFound"><u>Time Found</u></string>
+
+    <!-- Item Picture Screen -->
+    <string name="title_activity_item_picture">Item Picture</string>
 
 
 

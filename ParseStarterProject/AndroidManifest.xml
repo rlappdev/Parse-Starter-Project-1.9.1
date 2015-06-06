@@ -172,6 +172,22 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.parse.starter.GameDetailActivity" />
         </activity>
+        <activity
+            android:name=".FoundItemsActivity"
+            android:label="@string/title_activity_found_items"
+            android:parentActivityName=".LeaderboardActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.parse.starter.LeaderboardActivity" />
+        </activity>
+        <activity
+            android:name=".ItemPictureActivity"
+            android:label="@string/title_activity_item_picture"
+            android:parentActivityName=".FoundItemsActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.parse.starter.FoundItemsActivity" />
+        </activity>
     </application>
 
 </manifest>
