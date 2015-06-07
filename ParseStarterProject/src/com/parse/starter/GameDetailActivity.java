@@ -39,8 +39,10 @@ import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -73,6 +75,9 @@ public class GameDetailActivity extends Activity {
     Date startTime;
     String timeRemaining;
     private Button viewLeaderboard;
+    String mCurrentPhotoPath;
+    static final int REQUEST_TAKE_PHOTO = 1;
+
 
     public GameDetailActivity() {
     }
@@ -312,13 +317,13 @@ public class GameDetailActivity extends Activity {
 
 
 
-
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -356,6 +361,104 @@ public class GameDetailActivity extends Activity {
 
         }
     }
+
+/*
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+            byte[] image = null;
+
+            try {
+                image = readInFile(mCurrentPhotoPath);
+            }
+            catch(Exception e) {
+                e.printStackTrace();
+            }
+
+
+
+            parseImageFile = new ParseFile("item_pic.png", image);
+
+
+
+            ParseObject addFoundItem = new ParseObject("ItemsFound");
+            addFoundItem.put("item", item);
+            addFoundItem.put("itemCount", iCount);
+            addFoundItem.put("gameId", gameId);
+            addFoundItem.put("gameName", gName);
+            addFoundItem.put("playerName", playerName);
+            addFoundItem.put("image", parseImageFile);
+            addFoundItem.saveInBackground(new SaveCallback() {
+                public void done(ParseException e) {
+                    if (e == null) {
+                        updateFoundItems();
+                    }
+                    //checkForWin();
+                }
+            });
+
+
+
+
+
+        }
+    }
+
+    private byte[] readInFile(String path) throws IOException {
+
+        byte[] data = null;
+        File file = new File(path);
+        InputStream input_stream = new BufferedInputStream(new FileInputStream(file));
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        data = new byte[16384]; // 16K
+        int bytes_read;
+
+        while ((bytes_read = input_stream.read(data, 0, data.length)) != -1) {
+            buffer.write(data, 0, bytes_read);
+        }
+
+        input_stream.close();
+        return buffer.toByteArray();
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                        Uri.fromFile(photoFile));
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            }
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  // prefix
+                ".jpg",         // suffix
+                storageDir      // directory
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+        return image;
+    }
+*/
 
     private void updateFoundItems(){
         ParseQuery<ParseObject> itemFoundCountQuery = ParseQuery.getQuery("ItemsFound");

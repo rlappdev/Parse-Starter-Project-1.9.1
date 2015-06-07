@@ -37,6 +37,7 @@
 
     <uses-permission android:name="android.permission.CAMERA" />
 
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -166,27 +167,33 @@
         </activity>
         <activity
             android:name=".LeaderboardActivity"
-            android:label="@string/title_activity_leaderboard"
+            android:label="@string/title_activity_leaderboard" >
+            <!--
             android:parentActivityName=".GameDetailActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.parse.starter.GameDetailActivity" />
+            -->
         </activity>
         <activity
             android:name=".FoundItemsActivity"
-            android:label="@string/title_activity_found_items"
+            android:label="@string/title_activity_found_items" >
+            <!--
             android:parentActivityName=".LeaderboardActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.parse.starter.LeaderboardActivity" />
+            -->
         </activity>
         <activity
             android:name=".ItemPictureActivity"
-            android:label="@string/title_activity_item_picture"
+            android:label="@string/title_activity_item_picture" >
+            <!--
             android:parentActivityName=".FoundItemsActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.parse.starter.FoundItemsActivity" />
+            -->
         </activity>
     </application>
 

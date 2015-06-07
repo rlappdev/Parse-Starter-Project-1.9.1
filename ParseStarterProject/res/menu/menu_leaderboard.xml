@@ -1,7 +1,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/action_done"
+    <!--<item android:id="@+id/action_done"
         android:title="@string/action_done"
         android:showAsAction="ifRoom"
         android:textSize="14.0sp"
         android:textStyle="bold" />
+    -->
 </menu>

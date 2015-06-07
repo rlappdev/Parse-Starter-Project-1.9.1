@@ -58,7 +58,9 @@ public class FoundItemsActivity extends ListActivity {
 
         }
 
+        getActionBar().setTitle(username + "'s Found Items");
 
+        /*
         ParseQuery<ParseUser> query = ParseQuery.getQuery("User");
         query.getInBackground(username, new GetCallback<ParseUser>() {
             public void done(ParseUser object, com.parse.ParseException e) {
@@ -69,6 +71,7 @@ public class FoundItemsActivity extends ListActivity {
                 }
             }
         });
+        */
 
 
         foundItemsAdapter = new FoundItemsAdapter(this);
